@@ -1,0 +1,102 @@
+"""
+{% extends "base.html" %}
+
+{% block title %}Devices - Mikrotik Backup System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Mikrotik Devices</h1>
+    <a href="{{ url_for('devices.add_device') }}" class="btn btn-primary">Add New Device</a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Host/IP</th>
+                    <th>Connection Type</th>
+                    <th>Schedule</th>
+                    <th>Last Backup</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for device in devices %}
+                <tr>
+                    <td>{{ device.name }}</td>
+                    <td>{{ device.host }}</td>
+                    <td>{{ device.connection_type.upper() }}</td>
+                    <td>
+                        {% if device.schedule_type == 'none' %}
+                        None
+                        {% elif device.schedule_type == 'daily' %}
+                        Daily at {{ device.schedule_hour }}:{{ '%02d' % device.schedule_minute }}
+                        {% elif device.schedule_type == 'weekly' %}
+                        Weekly on {{ ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'][device.schedule_day] }} at {{ device.schedule_hour }}:{{ '%02d' % device.schedule_minute }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% set last_backup = device.backups.order_by(Backup.created_at.desc()).first() %}
+                        {% if last_backup %}
+                        {{ last_backup.created_at.strftime('%Y-%m-%d %H:%M:%S') }}
+                        {% else %}
+                        Never
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if last_backup %}
+                            {% if last_backup.status == 'success' %}
+                            <span class="badge bg-success">Success</span>
+                            {% else %}
+                            <span class="badge bg-danger">Failed</span>
+                            {% endif %}
+                        {% else %}
+                        <span class="badge bg-secondary">No backups</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="{{ url_for('backups.list_backups', device_id=device.id) }}" class="btn btn-sm btn-info">Backups</a>
+                            <a href="{{ url_for('devices.edit_device', device_id=device.id) }}" class="btn btn-sm btn-warning">Edit</a>
+                            <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ device.id }}">Delete</button>
+                            <form action="{{ url_for('backups.create_backup', device_id=device.id) }}" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-success">Backup Now</button>
+                            </form>
+                        </div>
+                        
+                        <!-- Delete Confirmation Modal -->
+                        <div class="modal fade" id="deleteModal{{ device.id }}" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Confirm Delete</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Are you sure you want to delete <strong>{{ device.name }}</strong>? This will also delete all backups for this device.
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                        <form action="{{ url_for('devices.delete_device', device_id=device.id) }}" method="post">
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7" class="text-center">No devices added yet</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+"""

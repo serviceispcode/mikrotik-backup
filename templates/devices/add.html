@@ -1,0 +1,122 @@
+"""
+{% extends "base.html" %}
+
+{% block title %}Add Device - Mikrotik Backup System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Add Mikrotik Device</h1>
+    <a href="{{ url_for('devices.list_devices') }}" class="btn btn-secondary">Back to Devices</a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <form method="post">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="name" class="form-label">Device Name</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="host" class="form-label">Host/IP Address</label>
+                    <input type="text" class="form-control" id="host" name="host" required>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="connection_type" class="form-label">Connection Type</label>
+                    <select class="form-select" id="connection_type" name="connection_type">
+                        <option value="api" selected>API</option>
+                        <option value="ssh">SSH</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="port" class="form-label">Port</label>
+                    <input type="number" class="form-control" id="port" name="port" value="8728">
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="schedule_type" class="form-label">Backup Schedule</label>
+                <select class="form-select" id="schedule_type" name="schedule_type">
+                    <option value="none" selected>None</option>
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                </select>
+            </div>
+            
+            <div class="row mb-3" id="schedule_options" style="display: none;">
+                <div class="col-md-4" id="day_select" style="display: none;">
+                    <label for="schedule_day" class="form-label">Day</label>
+                    <select class="form-select" id="schedule_day" name="schedule_day">
+                        <option value="0">Monday</option>
+                        <option value="1">Tuesday</option>
+                        <option value="2">Wednesday</option>
+                        <option value="3">Thursday</option>
+                        <option value="4">Friday</option>
+                        <option value="5">Saturday</option>
+                        <option value="6">Sunday</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="schedule_hour" class="form-label">Hour</label>
+                    <select class="form-select" id="schedule_hour" name="schedule_hour">
+                        {% for i in range(24) %}
+                        <option value="{{ i }}">{{ '%02d' % i }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="schedule_minute" class="form-label">Minute</label>
+                    <select class="form-select" id="schedule_minute" name="schedule_minute">
+                        {% for i in range(0, 60, 5) %}
+                        <option value="{{ i }}">{{ '%02d' % i }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button type="submit" class="btn btn-primary">Add Device</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const scheduleType = document.getElementById('schedule_type');
+        const scheduleOptions = document.getElementById('schedule_options');
+        const daySelect = document.getElementById('day_select');
+        
+        scheduleType.addEventListener('change', function() {
+            if (this.value === 'none') {
+                scheduleOptions.style.display = 'none';
+            } else {
+                scheduleOptions.style.display = 'flex';
+                
+                if (this.value === 'weekly') {
+                    daySelect.style.display = 'block';
+                } else {
+                    daySelect.style.display = 'none';
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}
+"""

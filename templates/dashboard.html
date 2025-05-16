@@ -1,0 +1,83 @@
+"""
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Mikrotik Backup System{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Dashboard</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-header">Devices</div>
+            <div class="card-body">
+                <h5 class="card-title">{{ devices_count }}</h5>
+                <p class="card-text">Total registered devices</p>
+                <a href="{{ url_for('devices.list_devices') }}" class="btn btn-light">Manage Devices</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-header">Successful Backups</div>
+            <div class="card-body">
+                <h5 class="card-title">{{ successful_backups }}</h5>
+                <p class="card-text">Total successful backups</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card text-white bg-danger mb-3">
+            <div class="card-header">Failed Backups</div>
+            <div class="card-body">
+                <h5 class="card-title">{{ failed_backups }}</h5>
+                <p class="card-text">Total failed backups</p>
+                <a href="{{ url_for('backups.list_logs') }}" class="btn btn-light">View Logs</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h3>Recent Backup Activities</h3>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Device</th>
+                            <th>Date/Time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for backup in recent_backups %}
+                        <tr>
+                            <td>{{ backup.device.name }}</td>
+                            <td>{{ backup.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                            <td>
+                                {% if backup.status == 'success' %}
+                                <span class="badge bg-success">Success</span>
+                                {% else %}
+                                <span class="badge bg-danger">Failed</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="3" class="text-center">No recent backups</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+"""

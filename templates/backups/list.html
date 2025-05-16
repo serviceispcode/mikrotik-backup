@@ -1,0 +1,66 @@
+"""
+{% extends "base.html" %}
+
+{% block title %}Backups for {{ device.name }} - Mikrotik Backup System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Backups for {{ device.name }}</h1>
+    <div>
+        <form action="{{ url_for('backups.create_backup', device_id=device.id) }}" method="post" class="d-inline">
+            <button type="submit" class="btn btn-success">Create Backup Now</button>
+        </form>
+        <a href="{{ url_for('devices.list_devices') }}" class="btn btn-secondary">Back to Devices</a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Date/Time</th>
+                    <th>Filename</th>
+                    <th>Size</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for backup in backups %}
+                <tr>
+                    <td>{{ backup.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                    <td>{{ backup.filename }}</td>
+                    <td>
+                        {% if backup.file_size %}
+                        {{ (backup.file_size / 1024)|round(2) }} KB
+                        {% else %}
+                        N/A
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if backup.status == 'success' %}
+                        <span class="badge bg-success">Success</span>
+                        {% else %}
+                        <span class="badge bg-danger">Failed</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if backup.status == 'success' %}
+                        <a href="{{ url_for('backups.download_backup', backup_id=backup.id) }}" class="btn btn-sm btn-primary">Download</a>
+                        {% else %}
+                        <button class="btn btn-sm btn-primary" disabled>Download</button>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center">No backups available</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+"""

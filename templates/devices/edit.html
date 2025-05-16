@@ -1,0 +1,120 @@
+"""
+{% extends "base.html" %}
+
+{% block title %}Edit Device - Mikrotik Backup System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Edit Mikrotik Device</h1>
+    <a href="{{ url_for('devices.list_devices') }}" class="btn btn-secondary">Back to Devices</a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <form method="post">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="name" class="form-label">Device Name</label>
+                    <input type="text" class="form-control" id="name" name="name" value="{{ device.name }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="host" class="form-label">Host/IP Address</label>
+                    <input type="text" class="form-control" id="host" name="host" value="{{ device.host }}" required>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" value="{{ device.username }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Leave blank to keep current password">
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="connection_type" class="form-label">Connection Type</label>
+                    <select class="form-select" id="connection_type" name="connection_type">
+                        <option value="api" {% if device.connection_type == 'api' %}selected{% endif %}>API</option>
+                        <option value="ssh" {% if device.connection_type == 'ssh' %}selected{% endif %}>SSH</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="port" class="form-label">Port</label>
+                    <input type="number" class="form-control" id="port" name="port" value="{{ device.port }}">
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="schedule_type" class="form-label">Backup Schedule</label>
+                <select class="form-select" id="schedule_type" name="schedule_type">
+                    <option value="none" {% if device.schedule_type == 'none' %}selected{% endif %}>None</option>
+                    <option value="daily" {% if device.schedule_type == 'daily' %}selected{% endif %}>Daily</option>
+                    <option value="weekly" {% if device.schedule_type == 'weekly' %}selected{% endif %}>Weekly</option>
+                </select>
+            </div>
+            
+            <div class="row mb-3" id="schedule_options" style="display: {% if device.schedule_type != 'none' %}flex{% else %}none{% endif %};">
+                <div class="col-md-4" id="day_select" style="display: {% if device.schedule_type == 'weekly' %}block{% else %}none{% endif %};">
+                    <label for="schedule_day" class="form-label">Day</label>
+                    <select class="form-select" id="schedule_day" name="schedule_day">
+                        {% for i in range(7) %}
+                        <option value="{{ i }}" {% if device.schedule_day == i %}selected{% endif %}>
+                            {{ ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'][i] }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="schedule_hour" class="form-label">Hour</label>
+                    <select class="form-select" id="schedule_hour" name="schedule_hour">
+                        {% for i in range(24) %}
+                        <option value="{{ i }}" {% if device.schedule_hour == i %}selected{% endif %}>{{ '%02d' % i }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="schedule_minute" class="form-label">Minute</label>
+                    <select class="form-select" id="schedule_minute" name="schedule_minute">
+                        {% for i in range(0, 60, 5) %}
+                        <option value="{{ i }}" {% if device.schedule_minute == i %}selected{% endif %}>{{ '%02d' % i }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button type="submit" class="btn btn-primary">Update Device</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const scheduleType = document.getElementById('schedule_type');
+        const scheduleOptions = document.getElementById('schedule_options');
+        const daySelect = document.getElementById('day_select');
+        
+        scheduleType.addEventListener('change', function() {
+            if (this.value === 'none') {
+                scheduleOptions.style.display = 'none';
+            } else {
+                scheduleOptions.style.display = 'flex';
+                
+                if (this.value === 'weekly') {
+                    daySelect.style.display = 'block';
+                } else {
+                    daySelect.style.display = 'none';
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}
+"""
