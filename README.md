@@ -15,19 +15,19 @@ A Flask-based web application for managing Mikrotik device backups.
 
 1. Clone the repository:
 ```
-git clone https://github.com/yourusername/mikrotik-backup.git
+git clone https://github.com/serviceispcode/mikrotik-backup.git
 cd mikrotik-backup
 ```
 
 2. Create a virtual environment:
 ```
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate  
 ```
 
 3. Install dependencies:
 ```
-pip install -r requirements.txt
+pip install flask flask-sqlalchemy flask-login apscheduler routeros-api werkzeug
 ```
 
 4. Run the application:
