@@ -53,6 +53,17 @@ services:
       - "5672:5672"
       - "15672:15672"
 
+  migrate:
+    image: migrate/migrate
+    depends_on:
+      - postgres
+    volumes:
+      - ./migrations:/migrations:ro
+    command:
+      - -path=/migrations
+      - -database=postgresql://user:pass@postgres:5432/mikrotik_backup?sslmode=disable
+      - up
+
 volumes:
   pgdata:
   miniodata: 

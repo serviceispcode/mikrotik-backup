@@ -53,4 +53,26 @@ A network backup system for MikroTik devices built with Go and Gin.
 ```yaml
 server:
   address: ":8080"
+```
+
+## Database Migrations
+
+We use [golang-migrate](https://github.com/golang-migrate/migrate) to manage schema versions.
+
+### Install migrate CLI
+```bash
+# for PostgreSQL support
+go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+```
+
+### Run migrations
+```bash
+# From project root
+docker-compose up -d postgres
+migrate -path migrations -database "postgresql://user:pass@localhost:5432/mikrotik_backup?sslmode=disable" up
+```
+
+### Rollback
+```bash
+migrate -path migrations -database "..." down 1
 ``` 

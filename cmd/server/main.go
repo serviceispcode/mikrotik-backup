@@ -24,7 +24,7 @@ func main() {
 
 	r := gin.Default()
 	// You may set DB pool in Gin context if needed
-	router.SetupRoutes(r)
+	router.SetupRoutes(r, pool)
 
 	log.Printf("starting server on %s", cfg.Server.Address)
 	if err := r.Run(cfg.Server.Address); err != nil {
