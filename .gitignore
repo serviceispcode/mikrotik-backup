@@ -1,0 +1,19 @@
+# Binaries
+/mikrotik-backup
+/build/
+/bin/
+
+# Vendor
+/vendor/
+
+# IDE and OS files
+/.idea/
+/.vscode/
+/.DS_Store
+
+# Go
+go.sum
+
+# Env files
+.env
+config.yaml 
